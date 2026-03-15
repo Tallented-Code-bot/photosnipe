@@ -29,42 +29,50 @@
 	];
 
 	// Compute active nav based on current page
-	const currentPath = derived(page, $page => $page.url.pathname);
+	const currentPath = derived(page, ($page) => $page.url.pathname);
 </script>
 
 <!-- Sidebar overlay for mobile (only shown if mobileOpen) -->
 <div
-	class="fixed inset-0 z-40 bg-black bg-opacity-40 md:hidden"
+	class="inset-0 bg-black bg-opacity-40 md:hidden fixed z-40"
 	class:hidden={!mobileOpen}
 	role="presentation"
-	on:click={() => onClose()}
-	on:keyup={(e) => e.key === 'Escape' && onClose()}
+	onclick={() => onClose()}
+	onkeyup={(e) => e.key === 'Escape' && onClose()}
 	tabindex="-1"
 	aria-hidden={!mobileOpen}
-/>
+></div>
 
 <nav
-	class="bg-sidebar text-sidebar flex min-h-screen w-64 flex-col p-4
-	   fixed z-50 inset-y-0 left-0 transition-transform md:static md:translate-x-0
-	   md:flex
-	   {mobileOpen ? 'translate-x-0' : '-translate-x-full'}"
+	class="bg-sidebar text-sidebar-text w-64 p-6 inset-y-0 left-0 md:static
+   md:translate-x-0 md:flex fixed z-50 flex min-h-screen flex-col
+   transition-transform
+   {mobileOpen ? 'translate-x-0' : '-translate-x-full'}"
+	class:hidden={!mobileOpen}
 	style="will-change: transform;"
 	aria-label="Main Navigation"
-	aria-modal={mobileOpen}
-	role="navigation"
-	class:hidden={!mobileOpen && !('md' in window.matchMedia('(min-width: 768px)') && window.matchMedia('(min-width: 768px)').matches)}
+	
+	
 >
-	<ul class="flex flex-col gap-2" role="list">
+	<ul class="gap-2 flex flex-col" role="list">
 		{#each navs as nav}
 			<li>
 				<a
 					href={nav.href}
-					class="flex items-center gap-3 rounded-lg px-3 py-2 font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors {($page.url.pathname === nav.href) ? 'bg-primary/10 text-primary' : 'hover:bg-sidebar-text/10'}"
-					aria-current={($page.url.pathname === nav.href) ? 'page' : undefined}
-					role="link"
+					class="gap-3 rounded-lg px-3 py-2 font-semibold focus-visible:ring-primary flex items-center transition-colors focus:outline-none focus-visible:ring-2
+      {$page.url.pathname === nav.href
+						? 'bg-primary/10 text-primary'
+						: 'hover:bg-primary/20 hover:text-primary'}"
+					aria-current={$page.url.pathname === nav.href ? 'page' : undefined}
+					
 					tabindex="0"
-					on:keydown={(e) => {if(e.key==='Enter'){ e.currentTarget.click(); onClose(); }}}
-					on:click={() => onClose()}
+onkeydown={(e) => {
+					if (e.key === 'Enter') {
+						e.currentTarget.click();
+						onClose();
+					}
+				}}
+					onclick={() => onClose()}
 				>
 					{@html nav.icon}
 					<span>{nav.label}</span>

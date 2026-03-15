@@ -1,3 +1,1 @@
-@import 'tailwindcss';
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
+/* This file is now deprecated. Global Tailwind imports are in app.css. */

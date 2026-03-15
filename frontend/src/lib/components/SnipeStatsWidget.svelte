@@ -2,15 +2,18 @@
 	// Placeholder for snipe stats
 </script>
 
-<div class="bg-widget w-full rounded-xl p-6">
-	<h2 class="mb-4 text-xl font-bold">Snipe Stats</h2>
-	<div class="grid grid-cols-2 gap-4">
+<div class="bg-widget rounded-lg border-widget-border shadow-md p-6 mb-6 w-full border">
+	<h2 class="mb-4 text-xl font-bold gap-2 flex items-center">
+		<span class="h-5 w-1 rounded bg-primary mr-2 inline-block"></span>
+		<span class="text-primary">Snipe Stats</span>
+	</h2>
+	<div class="gap-4 grid grid-cols-2">
 		<div>
-			<div class="text-2xl font-bold">15</div>
+			<div class="text-3xl font-extrabold text-gray-900">15</div>
 			<div class="text-sm text-gray-500">Snipes Today</div>
 		</div>
 		<div>
-			<div class="text-2xl font-bold">Artemis</div>
+			<div class="text-3xl font-extrabold text-primary">Artemis</div>
 			<div class="text-sm text-gray-500">Top Sniper</div>
 		</div>
 	</div>
