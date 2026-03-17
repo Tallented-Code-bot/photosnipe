@@ -2,8 +2,7 @@
 
 ## 1. Project Overview
 
-This repository contains a web application to display photos of other people.  
-It is a full-stack project with a Svelte (TypeScript-based) frontend and a Rust (Rocket framework) backend.  
+This repository contains a full-stack web application for displaying photos of other people.
 - **Frontend:** Svelte 5, TypeScript, TailwindCSS, ESLint, Prettier, Vite
 - **Backend:** Rust (edition 2024), Rocket web framework
 - **Database:** PostgreSQL
@@ -11,33 +10,48 @@ It is a full-stack project with a Svelte (TypeScript-based) frontend and a Rust 
 
 ---
 
-## 2. Build, Lint, and Test Commands
+## 2. MCP/Context7 Tooling Usage
 
-### Frontend (Svelte & TypeScript)
+### Svelte MCP Server (Mandatory)
+- For all Svelte or SvelteKit documentation lookup, code analysis, autofixing, and code review tasks, use the Svelte MCP server tools (list-sections, get-documentation, svelte-autofixer, etc).
+- Always use the MCP server for any Svelte, SvelteKit, or Svelte-related questions before searching the web. Proactively use its autofix/code validation tools when writing or editing `.svelte` files.
+- Leverage MCP for best practices, up-to-date Svelte features (e.g. Runes, reactivity), and error troubleshooting.
+- Only use web search as a fallback if the MCP server yields no relevant or sufficient answer.
+
+### Context7 API (Mandatory)
+- For any question about modern JavaScript, TypeScript, or Rust third-party libraries or frameworks, use the Context7 API (libraryId resolution and docs query tools) for code examples, usage, and documentation.
+- Prioritize using Context7 for package usage, install, troubleshooting, and configuration over web searches.
+- If both MCP and Context7 are relevant for a Svelte-related library task, consult each as appropriate.
+- Use web search only if Context7 does not return sufficient/authoritative information.
+
+---
+
+## 3. Build, Lint, and Test Commands
+
+### Frontend (SvelteKit, TypeScript, Vite)
 
 **Install dependencies:**
 - With npm:
   ```
   npm install
   ```
-- With pnpm (preferred):
+- Or with pnpm (preferred):
   ```
   pnpm install
   ```
 
-**Start dev server:**
+**Development server:**
 ```
 npm run dev
-# Or (open in browser)
-npm run dev -- --open
+# Or: npm run dev -- --open
 ```
 
-**Build:**
+**Production build:**
 ```
 npm run build
 ```
 
-**Preview (production build):**
+**Preview (serve prod build):**
 ```
 npm run preview
 ```
@@ -45,28 +59,28 @@ npm run preview
 **Lint (Prettier & ESLint):**
 ```
 npm run lint
-# (runs: prettier --check . && eslint .)
+# (prettier --check . && eslint .)
 ```
 
 **Format:**
 ```
 npm run format
-# (runs: prettier --write .)
+# (prettier --write .)
 ```
 
 **Type-check (strict):**
 ```
 npm run check
-# (runs: svelte-kit sync && svelte-check --tsconfig ./tsconfig.json)
+# (svelte-kit sync && svelte-check --tsconfig ./tsconfig.json)
 ```
 
-**Watch mode type-check:**
+**Type-check in watch mode:**
 ```
 npm run check:watch
 ```
 
 **Running a Single Test:**
-- _No test script is defined for the frontend. If tests are later defined (e.g., Vitest or Playwright), add instructions here._
+_There is currently no test script for the frontend. If you add Vitest or Playwright, document single-test usage here._
 
 ---
 
@@ -91,115 +105,134 @@ cargo test
 **Run a single test:**
 ```
 cargo test <test_name>
-# Replace <test_name> with the actual test function name.
+# Replace <test_name> with the test fn name.
 ```
+
 ---
 
-## 3. Code Style Guidelines
+## 4. Code Style Guidelines
 
 ### General
-- Write clear, maintainable, well-documented code.
-- Use meaningful names and provide comments, especially for complex logic.
-- Prefer pure functions and minimal side effects.
-- Prioritize type safety throughout (TypeScript strict for frontend, idiomatic Rust for backend).
+- Write clear, maintainable, and well-documented code.
+- Use meaningful names, especially for complex logic.
+- Prefer pure functions, minimal side effects.
+- Maximal type safety (TS strict, idiomatic Rust).
+- Always prefer MCP/Context7 tools for Svelte/libraries; update code per their guidance before using web search.
 
 ---
 
-### Frontend (Svelte & TypeScript)
+### Frontend (Svelte 5, TypeScript)
 
 #### Imports
-- Use ES module imports everywhere.
-- Group imports: external first, then internal, then relative.
-- Omit file extensions for TS/JS/Svelte unless necessary.
-- Use path aliases via SvelteKit config where possible (e.g. `$lib`).
+- Use ES modules everywhere.
+- Group imports: external, then internal/library, then relative.
+- Omit file extensions unless required.
+- Use SvelteKit path aliases where possible (`$lib`).
 
-#### Formatting (Enforced by Prettier)
-- Use **tabs** for indentation.
+#### Formatting (enforced by Prettier)
+- **Tabs** for indentation.
 - **Single quotes** for strings.
-- **Trailing commas:** none.
-- **Line width:** 100 characters.
-- **Prettier plugins:** includes plugin-svelte and TailwindCSS (sorts classes).
-- Respect `.prettierignore` (see file).
+- **No trailing commas**.
+- **Line width:** 100 chars.
+- **Prettier plugins:** Use `prettier-plugin-svelte`, `prettier-plugin-tailwindcss`.
+- Respect `.prettierignore`.
 
-#### TypeScript types
-- All code must be strongly typed (`"strict": true` in tsconfig).
-- Prefer interfaces/types for all complex objects.
-- Avoid `any`, prefer explicit union types.
-- Functions and variables must have explicit types where not inferred.
-- Use nullish/undefined coalescing thoughtfully, avoid “!” assertions.
+#### TypeScript
+- All code must be strongly typed (`strict: true` in tsconfig).
+- Prefer interfaces/types for all objects.
+- Avoid `any`; prefer union, `unknown`, or narrowing.
+- Explicit types unless trivial or contextually inferred.
+- Use nullish/undefined coalescing thoughtfully.
 
-#### Naming Conventions
-- **Variables/functions:** `camelCase`
-- **Types/interfaces:** `PascalCase`
-- **Files:** `kebab-case` or `camelCase`. Svelte components: `PascalCase.svelte`.
-- Exported Svelte components: default exports, capitalized.
+#### Naming
+- **Variables, functions:** `camelCase`
+- **Types, interfaces:** `PascalCase`
+- **Files:** `kebab-case` or `camelCase`; Svelte: `PascalCase.svelte`
+- Exported Svelte components must be default capitalized.
 
-#### Svelte Specifics
-- Use `<script lang="ts">` in all Svelte files.
-- Keep script and markup organized: logic at the top, template below.
-- For reactivity, use Svelte 5 runes appropriately (`$state`).
-- CSS: co-locate critical styles in components, global with Tailwind.
+#### Svelte Specific
+- Always use `<script lang="ts">` in Svelte files.
+- Organize: logic first, then markup.
+- Use Runes/reactivity idioms as per Svelte 5 (`$state`/`$derived`).
+- Co-locate component styles; use global Tailwind for layout/theme.
+- For any Svelte file creation, analysis, or fixing, use Svelte MCP server tooling first.
 
 #### Error Handling
-- Propagate errors up to a boundary (SvelteKit error pages or try/catch).
-- Use result/unwrapped patterns in TS where available.
-- Log errors with descriptive context.
+- Propagate errors to error boundaries (SvelteKit error pages, or via `try/catch`).
+- Use `Result`/unwrapped patterns in TS. Log errors with context.
+- Use Svelte MCP/autofixer for error fixes before resorting to alternative sources.
+
+#### Recommended references
+- [Svelte Styleguide](https://github.com/sveltejs/style-guide)
+- [SvelteKit docs](https://kit.svelte.dev/docs/project-structure)
+- [Svelte MCP Docs](https://kit.svelte.dev/docs)
 
 ---
 
-### Backend (Rust: Rocket)
+### Backend (Rust, Rocket)
 
-#### Imports & Organization
-- Use idiomatic module imports (use …;).
-- Group std, 3rd-party, then local modules.
-- Organize files with `mod.rs` if project grows.
+#### Imports & Module Org
+- Use idiomatic modules (`use ...;`).
+- Group: std/core/alloc first, external, then crate imports. Separate groups with blank lines.
+- Do **not** use multi-line imports. One per line.
 
-#### Naming Conventions
+#### Formatting
+- One blank line between all items.
+- Follow [Rust Style Guide](https://doc.rust-lang.org/1.70.0/style-guide/index.html) _except_:
+  - Prefer where-clauses over block-indented generics.
+  - Block-align long `where` clauses as per Rocket project `CONTRIBUTING.md`.
+  - Do not use automated `cargo fmt`; format manually to match project idioms.
+
+#### Naming
 - **Variables/functions:** `snake_case`
 - **Types/structs/enums:** `CamelCase`
 - **Constants/statics:** `SCREAMING_SNAKE_CASE`
 
+#### Documentation & Comments
+- All public APIs must have rustdoc comments (`/// ...`) + example.
+- Complex/important internal logic should be commented.
+
 #### Error Handling
-- Use `Result<T, E>` pattern throughout for error propagation.
-- Use the `?` operator for propagating errors upward.
-- Implement custom error types using enums when appropriate.
-- Always handle or document panics.
+- Use `Result<T, E>` everywhere possible.
+- Use the `?` operator for error propagation.
+- Custom error types should use enums.
+- Always handle/document panics.
 
-#### Commenting/Docs
-- Document all public APIs with triple-slash comments.
-- Write concise inline comments for complex logic.
+#### Testing
+- Write failing tests before fixing/adding features.
+- Add doctests/unit/integration test for each new feature/bugfix.
 
-#### Formatting
-- Enforce standard Rust style via `cargo fmt`.
-- Use `cargo clippy` for linting (if/when set up; add if not present).
-
----
-
-## 4. Linting, Formatting, and Automation
-
-- **Prettier**: Canonical code formatter. Run before each commit/PR.
-- **ESLint**: Lints JS/TS/Svelte code, disables certain rules for TypeScript as needed (e.g., `no-undef: off`).
-- **Svelte Linting**: Enabled via `eslint-plugin-svelte`.
-- **Type checking**: Always run `npm run check`.
-- **Rust**: Always run `cargo fmt` and `cargo test` before submitting changes.
-- **Engine Strict**: package manager must enforce Node engine compatibility via `.npmrc`.
+#### Recommended references
+- [Rocket CONTRIBUTING.md](https://github.com/SergioBenitez/Rocket/blob/master/CONTRIBUTING.md)
+- [Rust Style Guide](https://doc.rust-lang.org/1.70.0/style-guide/index.html)
 
 ---
 
-## 5. Cursor / Copilot / Agent-Specific Rules
+## 5. Linting, Formatting, and Automation
 
-- **No Cursor or Copilot rule files found** in this repo at this time.
-- If `.cursor/rules/`, `.cursorrules`, or `.github/copilot-instructions.md` are added, incorporate their rules into this guide.
-- Agentic contributors **should err on the side of verbosity and citation** when these files are missing.
+- **Prettier:** Run before each commit/PR.
+- **ESLint:** Lints JS/TS/Svelte. Type-aware, disables redundant TS rules.
+- **Svelte Linting:** Enabled via `eslint-plugin-svelte`.
+- **Type checking:** Always run `npm run check`.
+- **Rust:** Format (manual review) and test (`cargo test`) before changes.
+- **Engine strict:** Enforced via `.npmrc`.
 
 ---
 
-## 6. Additional Notes for Agentic Developers
+## 6. Cursor, Copilot, Agentic Rules
 
+- **No Cursor or Copilot rule files detected.** If `.cursor/rules/`, `.cursorrules`, or `.github/copilot-instructions.md` are added, incorporate their rules here.
+- In absence, **err on the side of explicitness, citation, and verbosity.**
+
+---
+
+## 7. Notes for Agentic Contributors
+
+- Always check MCP/Context7 before performing web searches or manual troubleshooting.
 - Always lint, type-check, and format before sending code or making a commit/PR.
-- If you add new tools (e.g., tests, clippy, additional formatters), update this file.
-- Cross-reference this file in PRs and code review—this is the canonical agentic ruleset.
-- When in doubt, follow SvelteKit, Prettier, TypeScript, and Rocket official best practices by default.
+- Update this file if you add new tools (test, clippy, formatters, etc).
+- Reference this file in PRs/code reviews—this is canonical.
+- If unsure, consult upstream (SvelteKit, Prettier, Rocket) docs/best practices.
 
 ---
 
