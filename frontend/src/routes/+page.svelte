@@ -55,5 +55,11 @@
 	>
 		<RecentSnipesWidget />
 		<SnipeStatsWidget />
+
+		<div>
+			<div class="bg-blue-500 text-white p-4 border-red-700 border-8">
+				TAILWIND EXTREME TEST VISIBLE
+			</div>
+		</div>
 	</main>
 </div>

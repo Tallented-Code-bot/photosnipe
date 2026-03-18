@@ -1,7 +1,2 @@
-@config '../tailwind.config.js';
-@source inline(
-	'bg-sidebar bg-widget text-sidebar-text border-widget-border bg-background bg-primary text-primary bg-red-900'
-);
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source inline('bg-blue-500');
