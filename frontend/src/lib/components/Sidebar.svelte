@@ -44,16 +44,10 @@
 ></div>
 
 <nav
-	class="bg-sidebar text-sidebar-text w-64 p-6 inset-y-0 left-0 md:static
-   md:translate-x-0 md:flex fixed z-50 flex min-h-screen flex-col
-   transition-transform
-   {mobileOpen ? 'translate-x-0' : '-translate-x-full'}"
-	class:hidden={!mobileOpen}
-	style="will-change: transform;"
+	class="bg-gray-800 text-gray-100 w-64 p-6 left-0 top-14 transition-transform z-40 h-[calc(100vh-3.5rem)] hidden md:fixed md:block flex-col"
 	aria-label="Main Navigation"
-	
-	
 >
+
 	<ul class="gap-2 flex flex-col" role="list">
 		{#each navs as nav}
 			<li>

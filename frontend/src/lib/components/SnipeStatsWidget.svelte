@@ -2,7 +2,7 @@
 	// Placeholder for snipe stats
 </script>
 
-<div class="bg-widget rounded-lg border-widget-border shadow-md p-6 mb-6 w-full border">
+<div class="bg-white rounded-lg border shadow-md p-6 mb-6 w-full">
 	<h2 class="mb-4 text-xl font-bold gap-2 flex items-center">
 		<span class="h-5 w-1 rounded bg-primary mr-2 inline-block"></span>
 		<span class="text-primary">Snipe Stats</span>
