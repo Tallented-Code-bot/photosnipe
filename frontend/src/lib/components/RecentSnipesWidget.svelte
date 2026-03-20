@@ -2,7 +2,7 @@
 	// Placeholder for recent snipes
 </script>
 
-<div class="bg-white rounded-lg border shadow-md p-6 mb-6 w-full">
+<div class="bg-white rounded-lg shadow-md p-6 mb-6 w-full border">
 	<h2 class="mb-4 text-xl font-bold gap-2 flex items-center">
 		<span class="h-5 w-1 rounded bg-primary mr-2 inline-block"></span>
 		<span class="text-primary">Recent Snipes</span>

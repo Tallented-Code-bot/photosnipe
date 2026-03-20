@@ -44,10 +44,9 @@
 ></div>
 
 <nav
-	class="bg-gray-800 text-gray-100 w-64 p-6 left-0 top-14 transition-transform z-40 h-[calc(100vh-3.5rem)] hidden md:fixed md:block flex-col"
+	class="bg-gray-800 text-gray-100 w-64 p-6 left-0 top-14 md:fixed md:block z-40 hidden h-[calc(100vh-3.5rem)] flex-col transition-transform"
 	aria-label="Main Navigation"
 >
-
 	<ul class="gap-2 flex flex-col" role="list">
 		{#each navs as nav}
 			<li>
@@ -58,14 +57,13 @@
 						? 'bg-primary/10 text-primary'
 						: 'hover:bg-primary/20 hover:text-primary'}"
 					aria-current={$page.url.pathname === nav.href ? 'page' : undefined}
-					
 					tabindex="0"
-onkeydown={(e) => {
-					if (e.key === 'Enter') {
-						e.currentTarget.click();
-						onClose();
-					}
-				}}
+					onkeydown={(e) => {
+						if (e.key === 'Enter') {
+							e.currentTarget.click();
+							onClose();
+						}
+					}}
 					onclick={() => onClose()}
 				>
 					{@html nav.icon}
