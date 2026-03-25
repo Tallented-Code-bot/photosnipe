@@ -5,5 +5,8 @@ edition = "2024"
 
 [dependencies]
 rocket = { version = "0.5.1", features = ["json"] }
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "macros"] }
-rocket_db_pools = { version = "0.2", features = ["sqlx_postgres"] }
+mongodb = { version = "2", default-features = false, features = ["tokio-runtime"] }
+serenity = { version = "0.11", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+tokio = { version = "1.37", features = ["full"] }
+dotenvy = "0.15"
+serde = { version = "1", features = ["derive"] }

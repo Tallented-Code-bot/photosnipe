@@ -5,7 +5,7 @@
 This repository contains a full-stack web application for displaying photos of other people.
 - **Frontend:** Svelte 5, TypeScript, TailwindCSS, ESLint, Prettier, Vite
 - **Backend:** Rust (edition 2024), Rocket web framework
-- **Database:** PostgreSQL
+- **Database:** MongoDB (migrated from PostgreSQL)
 - **Authentication:** Discord via Auth0
 
 ---
@@ -30,83 +30,31 @@ This repository contains a full-stack web application for displaying photos of o
 
 ### Frontend (SvelteKit, TypeScript, Vite)
 
-**Install dependencies:**
-- With npm:
-  ```
-  npm install
-  ```
-- Or with pnpm (preferred):
-  ```
-  pnpm install
-  ```
+| Action | Command |
+| ------ | ------- |
+| Install dependencies (pnpm preferred) | `pnpm install` or `npm install` |
+| Development server | `npm run dev` |
+| Production build | `npm run build` |
+| Preview build | `npm run preview` |
+| Lint | `npm run lint` (prettier & eslint) |
+| Format | `npm run format` |
+| Type-check | `npm run check` |
+| Type-check (watch) | `npm run check:watch` |
+| Single test | _No frontend test script currently – if added, document usage here_ |
 
-**Development server:**
-```
-npm run dev
-# Or: npm run dev -- --open
-```
+### Backend (Rust + Rocket + MongoDB)
 
-**Production build:**
-```
-npm run build
-```
+| Action | Command |
+| ------ | ------- |
+| Install dependencies | `cargo fetch` |
+| Build | `cargo build` |
+| Run server | `cargo run` |
+| Run all tests | `cargo test` |
+| Run a single test | `cargo test <test_name>` |
 
-**Preview (serve prod build):**
-```
-npm run preview
-```
-
-**Lint (Prettier & ESLint):**
-```
-npm run lint
-# (prettier --check . && eslint .)
-```
-
-**Format:**
-```
-npm run format
-# (prettier --write .)
-```
-
-**Type-check (strict):**
-```
-npm run check
-# (svelte-kit sync && svelte-check --tsconfig ./tsconfig.json)
-```
-
-**Type-check in watch mode:**
-```
-npm run check:watch
-```
-
-**Running a Single Test:**
-_There is currently no test script for the frontend. If you add Vitest or Playwright, document single-test usage here._
-
----
-
-### Backend (Rust + Rocket)
-
-**Install dependencies:**
-```
-cargo fetch
-```
-**Build:**
-```
-cargo build
-```
-**Run server:**
-```
-cargo run
-```
-**Run all tests:**
-```
-cargo test
-```
-**Run a single test:**
-```
-cargo test <test_name>
-# Replace <test_name> with the test fn name.
-```
+#### MongoDB local test instance
+- If integration tests require a running MongoDB, ensure your test runner spins up a local or in-memory instance, or set the `MONGODB_URI` appropriately.
+- Document any test fixtures/utilities required for MongoDB. Update this file to reflect new commands/utilities as they are added.
 
 ---
 
@@ -169,11 +117,11 @@ cargo test <test_name>
 
 ---
 
-### Backend (Rust, Rocket)
+### Backend (Rust, Rocket, MongoDB)
 
 #### Imports & Module Org
 - Use idiomatic modules (`use ...;`).
-- Group: std/core/alloc first, external, then crate imports. Separate groups with blank lines.
+- Group: std/core/alloc first, external (including `mongodb`/BSON types), then crate imports. Separate groups with blank lines.
 - Do **not** use multi-line imports. One per line.
 
 #### Formatting
@@ -187,24 +135,31 @@ cargo test <test_name>
 - **Variables/functions:** `snake_case`
 - **Types/structs/enums:** `CamelCase`
 - **Constants/statics:** `SCREAMING_SNAKE_CASE`
+- MongoDB collections: use clear, consistent names (plural, snake_case preferred).
+- Data models: ensure BSON (`bson::Document`) usage is type-checked and schemas are documented.
 
 #### Documentation & Comments
 - All public APIs must have rustdoc comments (`/// ...`) + example.
 - Complex/important internal logic should be commented.
+- Document MongoDB connection pool usage and configuration if customized.
 
 #### Error Handling
 - Use `Result<T, E>` everywhere possible.
-- Use the `?` operator for error propagation.
-- Custom error types should use enums.
+- Use the `?` operator for error propagation; document contexts for MongoDB driver errors.
+- Always match and handle connection, query, and conversion errors from MongoDB operations.
+- Custom error types should use enums, with variants for database/connection errors.
 - Always handle/document panics.
 
 #### Testing
 - Write failing tests before fixing/adding features.
 - Add doctests/unit/integration test for each new feature/bugfix.
+- When testing MongoDB code, use test isolation (unique db/collections, or mock/integration with teardown).
 
 #### Recommended references
 - [Rocket CONTRIBUTING.md](https://github.com/SergioBenitez/Rocket/blob/master/CONTRIBUTING.md)
 - [Rust Style Guide](https://doc.rust-lang.org/1.70.0/style-guide/index.html)
+- [mongodb Rust driver](https://www.mongodb.com/docs/drivers/rust/)
+- [BSON crate docs](https://docs.rs/bson/latest/bson/)
 
 ---
 
@@ -216,6 +171,7 @@ cargo test <test_name>
 - **Type checking:** Always run `npm run check`.
 - **Rust:** Format (manual review) and test (`cargo test`) before changes.
 - **Engine strict:** Enforced via `.npmrc`.
+- **MongoDB:** Prefer documenting local dev/test db setup & test utilities with any config changes here.
 
 ---
 
@@ -230,9 +186,9 @@ cargo test <test_name>
 
 - Always check MCP/Context7 before performing web searches or manual troubleshooting.
 - Always lint, type-check, and format before sending code or making a commit/PR.
-- Update this file if you add new tools (test, clippy, formatters, etc).
+- Update this file if you add new tools, migrate libraries (including database), or add test helpers/configs (e.g., new DB URI, CI secrets, etc.).
 - Reference this file in PRs/code reviews—this is canonical.
-- If unsure, consult upstream (SvelteKit, Prettier, Rocket) docs/best practices.
+- If unsure, consult upstream (SvelteKit, Prettier, MongoDB, Rocket) docs/best practices.
 
 ---
 
