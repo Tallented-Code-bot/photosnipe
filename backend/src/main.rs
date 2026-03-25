@@ -13,6 +13,8 @@ use mongodb::{Client, Database};
 
 mod discord_bot;
 mod models;
+mod responses;
+mod handlers;
 
 #[get("/test_db")]
 async fn test_db(db: &State<Database>) -> String {
@@ -52,7 +54,33 @@ async fn main() -> Result<(), rocket::Error> {
     let rocket = rocket::build()
         .manage(db)
         .mount("/api", routes![test_db])
-        .mount("/api", routes![])
+        .mount(
+            "/api",
+            routes![
+                // Person routes
+                handlers::persons::list_persons,
+                handlers::persons::get_person,
+                handlers::persons::get_snipes_by_person,
+                handlers::persons::get_snipes_of_person,
+                handlers::persons::get_person_stats,
+                handlers::persons::create_person,
+                handlers::persons::update_person,
+                handlers::persons::delete_person,
+                // Snipe routes
+                handlers::snipes::list_snipes,
+                handlers::snipes::get_snipe,
+                handlers::snipes::get_snipes_by_channel,
+                handlers::snipes::get_snipes_by_guild,
+                handlers::snipes::search_snipes,
+                handlers::snipes::create_snipe,
+                handlers::snipes::update_snipe,
+                handlers::snipes::delete_snipe,
+                // Stats routes
+                handlers::stats::get_global_stats,
+                handlers::stats::get_top_snipers,
+                handlers::stats::get_top_snipees,
+            ],
+        )
         .mount("/", FileServer::from(relative!("static")).rank(0))
         .mount("/", routes![spa_fallback]);
     rocket.launch().await?;
