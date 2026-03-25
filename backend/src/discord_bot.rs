@@ -24,13 +24,18 @@ impl EventHandler for Bot {
             .filter(|a| a.width.is_some() && a.height.is_some())
             .collect();
         if image_attachments.is_empty() {
+            println!("[discord_bot] Message from {} has no image attachments, skipping", msg.author.name);
             return;
         }
 
         // If no one is mentioned, skip
         if msg.mentions.is_empty() {
+            println!("[discord_bot] Message from {} has images but no mentions, skipping", msg.author.name);
             return;
         }
+
+        println!("[discord_bot] 📸 Processing snipe from {} with {} image(s) and {} mention(s)", 
+                 msg.author.name, image_attachments.len(), msg.mentions.len());
 
         let sniper_id = msg.author.id.0 as i64;
         let sniper_name = msg.author.name.clone();
@@ -62,7 +67,10 @@ impl EventHandler for Bot {
         let upsert_options = mongodb::options::UpdateOptions::builder()
             .upsert(true)
             .build();
-        let _ = persons_collection.update_one(sniper_filter, sniper_update, upsert_options).await;
+        match persons_collection.update_one(sniper_filter, sniper_update, upsert_options).await {
+            Ok(_) => println!("[discord_bot] ✅ Upserted sniper: {} ({})", sniper_name, sniper_id),
+            Err(e) => eprintln!("[discord_bot] ❌ Failed to upsert sniper: {}", e),
+        }
 
         for snipee in msg.mentions {
             let snipee_id = snipee.id.0 as i64;
@@ -80,7 +88,10 @@ impl EventHandler for Bot {
             let upsert_options = mongodb::options::UpdateOptions::builder()
                 .upsert(true)
                 .build();
-            let _ = persons_collection.update_one(snipee_filter, snipee_update, upsert_options).await;
+            match persons_collection.update_one(snipee_filter, snipee_update, upsert_options).await {
+                Ok(_) => println!("[discord_bot] ✅ Upserted snipee: {} ({})", snipee_name, snipee_id),
+                Err(e) => eprintln!("[discord_bot] ❌ Failed to upsert snipee: {}", e),
+            }
  
             // For each image, create a snipe
             let snipes_collection = self.db.collection::<mongodb::bson::Document>("snipes");
@@ -93,7 +104,10 @@ impl EventHandler for Bot {
                     "channel_id": channel_id,
                     "guild_id": guild_id,
                 };
-                let _ = snipes_collection.insert_one(snipe_doc, None).await;
+                match snipes_collection.insert_one(snipe_doc, None).await {
+                    Ok(_) => println!("[discord_bot] ✅ Inserted snipe: {} -> {} ({})", sniper_name, snipee_name, att.url),
+                    Err(e) => eprintln!("[discord_bot] ❌ Failed to insert snipe: {}", e),
+                }
             }
         }
     }
